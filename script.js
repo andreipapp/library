@@ -1,9 +1,10 @@
 const myLibrary = [];
 const library = document.querySelector('.inner-container');
 const newBook = document.querySelector('.newBook');
-const dialog = document.querySelector('dialog');
-const addBook = dialog.querySelector('#addBtn');
-const closeBtn = dialog.querySelector('button');
+const addBook = document.querySelector('#addBtn');
+const closeBtn = document.querySelector('.close');
+const form = document.querySelector('.form');
+const formOverlay = document.querySelector('.overlay')
 
 function Book(title, author, pages, isRead) {
     this.Title = title;
@@ -23,7 +24,7 @@ function resetForm() {
 
 
 addBookToLibrary("Clean Code", "Robert C. Martin", 464, true);
-addBookToLibrary("You Don't Know JS: Scope & Closures", "Kyle Simpson", 98, false);
+addBookToLibrary("You Don't Know JS: Scope and Closures", "Kyle Simpson", 98, false);
 addBookToLibrary("The Pragmatic Programmer", "Andrew Hunt and David Thomas", 352, true);
 
 
@@ -33,10 +34,16 @@ function displayBooks() {
         const bookCard = document.createElement('div');
         const readStatus = document.createElement('button');
         const removeBtn = document.createElement('button');
-        removeBtn.classList.add('remove');
+        const cardButtons = document.createElement('div');
         removeBtn.textContent = 'Remove'
-        readStatus.classList.add('status');
         readStatus.textContent = 'Toggle read status';
+
+        cardButtons.classList.add('flex-card-buttons')
+        readStatus.classList.add('status');
+        removeBtn.classList.add('remove');
+        bookCard.classList.add('card');
+
+
 
 
         for (let key in book) {
@@ -50,16 +57,16 @@ function displayBooks() {
                 right.classList.add(`${key}`);
                 bookInfo.appendChild(left);
                 bookInfo.appendChild(right);
-                bookInfo.classList.add('flex');
+                bookInfo.classList.add('flex-info-data');
                 bookCard.appendChild(bookInfo);
 
             }
-            bookCard.classList.add('card');
 
         }
+        cardButtons.appendChild(readStatus);
+        cardButtons.appendChild(removeBtn);
+        bookCard.appendChild(cardButtons);
         library.appendChild(bookCard);
-        bookCard.appendChild(readStatus);
-        bookCard.appendChild(removeBtn);
         removeBtn.addEventListener('click', () => {
             myLibrary.splice(index, 1);
             displayBooks();
@@ -72,19 +79,26 @@ function displayBooks() {
 }
 
 
-newBook.addEventListener('click', () => {
-    dialog.showModal();
+closeBtn.addEventListener('click', () => {
+    formOverlay.style.display = 'none';
 })
-addBook.addEventListener('click', () => {
+newBook.addEventListener('click', () => {
+    formOverlay.style.display = 'initial';
+})
+addBook.addEventListener('click', (e) => {
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
     const pages = document.getElementById('pages').value;
     const isRead = document.getElementById('read').checked;
-    addBookToLibrary(title, author, pages, isRead);
-    resetForm();
-    dialog.close();
-})
-closeBtn.addEventListener('click', () => {
-    dialog.close();
-})
+    if (!title || !author || !pages) {
+        alert('Please fill in all fields before adding the book.');
+        e.preventDefault();
+        return;
+    }
 
+    addBookToLibrary(title, author, pages, isRead);
+    e.preventDefault();
+    form.reset();
+    formOverlay.style.display = 'none';
+
+})
