@@ -6,11 +6,14 @@ const closeBtn = document.querySelector('.close');
 const form = document.querySelector('.form');
 const formOverlay = document.querySelector('.overlay')
 
-function Book(title, author, pages, isRead) {
-    this.Title = title;
-    this.Author = author;
-    this.Pages = pages;
-    this.Read = isRead;
+
+class Book {
+    constructor(title, author, pages, isRead) {
+        this.Title = title;
+        this.Author = author;
+        this.Pages = pages;
+        this.Read = isRead;
+    }
 }
 
 function addBookToLibrary(title, author, pages, isRead) {
